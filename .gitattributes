@@ -1,0 +1,8 @@
+# Python source files
+*.py text diff=python eol=lf
+
+# Plain text files
+*.csv text eol=lf
+*.md text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
