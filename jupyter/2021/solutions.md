@@ -41,6 +41,49 @@ result = sum(1 for i, value in enumerate(rolling[1:], 1) if value > rolling[i-1]
 print(result)
 ```
 
+# Day 2: Dive!
+## Part 1
+
+```python
+with open(inputs_folder / "day 2" / "part 1.txt", "r", encoding="utf-8") as stream:
+    data = []
+    for line in stream:
+        direction, value = line.strip().split(" ")
+        value = int(value)
+        data.append((direction, value))
+```
+
+```python
+hor, dep = 0, 0
+for direction, value in data:
+    if direction == "forward":
+        hor += value
+    elif direction == "down":
+        dep += value
+    elif direction == "up":
+        dep -= value
+    else:
+        raise ValueError(direction, value)
+print(hor * dep)
+```
+
+## Part 2
+
+```python
+hor, dep, aim = 0, 0, 0
+for direction, value in data:
+    if direction == "forward":
+        hor += value
+        dep += aim * value
+    elif direction == "down":
+        aim += value
+    elif direction == "up":
+        aim -= value
+    else:
+        raise ValueError(direction, value)
+print(hor * dep)
+```
+
 ```python
 
 ```
