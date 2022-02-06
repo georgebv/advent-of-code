@@ -84,6 +84,56 @@ for direction, value in data:
 print(hor * dep)
 ```
 
+# Day 3: Binary Diagnostic
+## Part 1
+
+```python
+with open(inputs_folder / "day 3" / "part 1.txt", "r", encoding="utf-8") as stream:
+    data = list(map(lambda x: x.strip(), stream))
+```
+
+```python
+size = len(data[0])
+joined = "".join(data)
+
+def find_most_common(string):
+    return max(set(string), key=string.count)
+```
+
+```python
+gamma_rate = int("".join([find_most_common(joined[i::size]) for i in range(size)]), 2)
+epsilon_rate = (1 << size) - 1 - gamma_rate
+print(gamma_rate * epsilon_rate)
+```
+
+## Part 2
+
+```python
+ogr = [*data]
+for i in range(size):
+    most_common = find_most_common("".join(ogr)[i::size])
+    ogr = [value for value in ogr if value[i] == most_common]
+    if len(ogr) == 1:
+        break
+ogr = ogr[0]
+print(ogr)
+```
+
+```python
+csr = [*data]
+for i in range(size):
+    most_common = find_most_common("".join(csr)[i::size])
+    csr = [value for value in csr if value[i] != most_common]
+    if len(csr) == 1:
+        break
+csr = csr[0]
+print(csr)
+```
+
+```python
+print(int(ogr, 2) * int(csr, 2))
+```
+
 ```python
 
 ```
