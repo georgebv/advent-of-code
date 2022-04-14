@@ -16,6 +16,8 @@ jupyter:
 ```python
 import pathlib
 
+import numpy as np
+
 inputs_folder = pathlib.Path("./inputs")
 ```
 
@@ -132,6 +134,108 @@ print(csr)
 
 ```python
 print(int(ogr, 2) * int(csr, 2))
+```
+
+# Day 4: Giant Squid
+## Part 1
+
+```python
+with open(inputs_folder / "day 4" / "part 1.txt", "r", encoding="utf-8") as stream:   
+    lines = list(map(lambda x: x.strip(), stream))
+draws = list(map(lambda x: int(x), lines[0].split(",")))
+```
+
+```python
+class Board:
+
+    def __init__(self, numbers) -> None:
+        assert len(numbers) == 5
+        assert all(len(row) == 5 for row in numbers)
+        self.numbers = np.array(numbers)
+        self.state = np.full(self.numbers.shape, False, dtype=bool)
+        self.draws = []
+    
+    def add_number(self, number: int) -> None:
+        self.state |= self.numbers == number
+        self.draws.append(number)
+    
+    @property
+    def has_won(self) -> bool:
+        if any(self.state.all(axis=i).any() for i in range(len(self.state.shape))):
+            return True
+        return False
+    
+    @property
+    def score(self) -> int:
+        return self.numbers[~self.state].sum() * self.draws[-1]
+```
+
+```python
+boards = []
+for line in lines[1:]:
+    if line == "":
+        boards.append([])
+    else:
+        boards[-1].append(
+            [
+                int(value)
+                for value in line.split(" ")
+                if value != ""
+            ]
+        )
+
+boards = [Board(numbers) for numbers in boards]
+```
+
+```python
+def find_first_winning_board(draws, boards):
+    for draw in draws:
+        for board in boards:
+            board.add_number(draw)
+            if board.has_won:
+                return board
+```
+
+```python
+assert not any(board.has_won for board in boards)
+board = find_first_winning_board(draws, boards)
+print(board.score)
+```
+
+## Part 2
+
+```python
+boards = []
+for line in lines[1:]:
+    if line == "":
+        boards.append([])
+    else:
+        boards[-1].append(
+            [
+                int(value)
+                for value in line.split(" ")
+                if value != ""
+            ]
+        )
+
+boards = [Board(numbers) for numbers in boards]
+```
+
+```python
+def find_last_winning_board(draws, boards):
+    for draw in draws:
+        for board in boards:
+            if not board.has_won:
+                board.add_number(draw)
+            if all(board.has_won for board in boards):
+                return board
+    raise RuntimeError
+```
+
+```python
+assert not any(board.has_won for board in boards)
+board = find_last_winning_board(draws, boards)
+print(board.score)
 ```
 
 ```python
